@@ -23,5 +23,5 @@ Aplicación desarrollada en **Blazor Web App** para el consumo y visualización 
 ## ⚙️ Instrucciones de Ejecución Local
 
 1. Clonar el repositorio:
-   ```bash
-   git clone [https://github.com/Nestor5697/Ziur-Prueba-Tecnica.git](https://github.com/Nestor5697/Ziur-Prueba-Tecnica.git)
+   
+   git clone https://github.com/Nestor5697/Ziur-Prueba-Tecnica.git
