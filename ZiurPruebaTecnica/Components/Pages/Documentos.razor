@@ -1,0 +1,129 @@
+﻿@page "/documentos"
+@rendermode InteractiveServer
+@using ZiurPruebaTecnica.Models
+@using ZiurPruebaTecnica.Services
+@inject DocumentoService DocumentoService
+
+<PageTitle>Documentos - Ziur</PageTitle>
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3>Lista de Documentos</h3>
+        <span class="badge bg-primary fs-6">
+            Total: @(documentosFiltrados?.Count ?? 0)
+        </span>
+    </div>
+
+    @if (huboError)
+    {
+        <div class="alert alert-danger d-flex align-items-center" role="alert">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+            <div>
+                <strong>Error de conexión:</strong> @mensajeError
+            </div>
+        </div>
+    }
+    else if (cargando)
+    {
+        <div class="d-flex align-items-center my-4">
+            <div class="spinner-border text-primary me-3" role="status"></div>
+            <span>Cargando documentos desde la API de Ziur...</span>
+        </div>
+    }
+    else
+    {
+        <!-- Buscador en tiempo real -->
+        <div class="row mb-3">
+            <div class="col-md-6 col-lg-4">
+                <input type="text"
+                       class="form-control"
+                       placeholder="Buscar por descripción o código..."
+                       @bind="criterioBusqueda"
+                       @bind:event="oninput" />
+            </div>
+        </div>
+
+        <div class="table-responsive shadow-sm rounded">
+            <table class="table table-hover table-striped align-middle mb-0">
+                <thead class="table-dark">
+                    <tr>
+                        <th style="width: 15%;">Código</th>
+                        <th>Descripción</th>
+                        <th style="width: 20%;" class="text-center">Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (documentosFiltrados != null && documentosFiltrados.Any())
+                    {
+                        @foreach (var doc in documentosFiltrados)
+                        {
+                            <tr>
+                                <td class="fw-bold">@doc.Codigo</td>
+                                <td>@doc.Descripcion</td>
+                                <td class="text-center">
+                                    @if (doc.VActiva)
+                                    {
+                                        <span class="badge bg-success">Activo</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-secondary">Inactivo</span>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="3" class="text-center text-muted py-3">
+                                No se encontraron documentos que coincidan con la búsqueda.
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
+
+@code {
+    private List<Documento>? documentos;
+    private bool cargando = true;
+    private bool huboError = false;
+    private string mensajeError = string.Empty;
+    private string criterioBusqueda = string.Empty;
+
+    // Propiedad calculada usando LINQ (Equivalente a Java Streams)
+    private List<Documento>? documentosFiltrados =>
+        string.IsNullOrWhiteSpace(criterioBusqueda)
+            ? documentos
+            : documentos?.Where(d =>
+                d.Descripcion.Contains(criterioBusqueda, StringComparison.OrdinalIgnoreCase) ||
+                d.Codigo.ToString().Contains(criterioBusqueda)
+              ).ToList();
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            cargando = true;
+            huboError = false;
+            documentos = await DocumentoService.ObtenerDocumentos();
+        }
+        catch (HttpRequestException ex)
+        {
+            huboError = true;
+            mensajeError = $"No se pudo comunicar con el servidor de Ziur. ({ex.StatusCode})";
+        }
+        catch (Exception ex)
+        {
+            huboError = true;
+            mensajeError = $"Ocurrió un error inesperado: {ex.Message}";
+        }
+        finally
+        {
+            cargando = false;
+        }
+    }
+}

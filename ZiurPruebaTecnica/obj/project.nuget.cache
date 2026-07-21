@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "lwA6npIvYH0=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\Padil\\Documents\\Visual Studio 18\\Projects\\ZiurPruebaTecnica\\ZiurPruebaTecnica\\ZiurPruebaTecnica.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Padil\\.nuget\\packages\\microsoft.aspnetcore.app.internal.assets\\10.0.10\\microsoft.aspnetcore.app.internal.assets.10.0.10.nupkg.sha512"
+  ],
+  "logs": []
+}
