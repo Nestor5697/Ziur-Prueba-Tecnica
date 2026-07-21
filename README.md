@@ -25,3 +25,6 @@ Aplicación desarrollada en **Blazor Web App** para el consumo y visualización 
 1. Clonar el repositorio:
    
    git clone https://github.com/Nestor5697/Ziur-Prueba-Tecnica.git
+
+
+<img width="1910" height="890" alt="Animación" src="https://github.com/user-attachments/assets/d399b9bb-14e8-414e-9250-5d19485f521c" />
